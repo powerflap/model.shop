@@ -1,5 +1,5 @@
 package service;
-
+import exception.NoSuchProductException;
 import model.basket.BasketItem;
 import model.basket.ProductBasket;
 import model.basket.UserBasket;
@@ -24,7 +24,7 @@ public class BasketService {
     public void addProductToBasket(UUID id) {
         Optional<Product> optionalProduct = storageService.getProductById(id);
         if (optionalProduct.isEmpty()) {
-            throw new IllegalArgumentException("Товар с указанным ID не найден");
+            throw new NoSuchProductException(id);
         }
         productBasket.addProduct(id);
     }
