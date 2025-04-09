@@ -1,42 +1,31 @@
 package controller;
 
-import model.article.Article;
-import model.product.Product;
-import model.search.SearchResult;
+import model.basket.UserBasket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import service.SearchService;
-import service.StorageService;
+import service.BasketService;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class ShopController {
-
-    private final SearchService searchService;
-    private final StorageService storageService;
+    private final BasketService basketService;
 
     @Autowired
-    public ShopController(SearchService searchService, StorageService storageService) {
-        this.searchService = searchService;
-        this.storageService = storageService;
+    public ShopController(BasketService basketService) {
+        this.basketService = basketService;
     }
 
-    @GetMapping("/products")
-    public Collection<Product> getAllProducts() {
-        return storageService.getAllProducts();
+    @GetMapping("/basket/{id}")
+    public String addProduct(@PathVariable("id") UUID id) {
+        basketService.addProductToBasket(id);
+        return "Продукт успешно добавлен";
     }
 
-    @GetMapping("/articles")
-    public Collection<Article> getAllArticles() {
-        return storageService.getAllArticles();
-    }
-
-    @GetMapping("/search")
-    public List<SearchResult> search(@RequestParam String pattern) {
-        return searchService.search(pattern);
+    @GetMapping("/basket")
+    public UserBasket getUserBasket() {
+        return basketService.getUserBasket();
     }
 }
